@@ -1,0 +1,81 @@
+# version: "3.8"
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:18.1-alpine3.22
+    restart: always
+
+    env_file:
+      - ./data/.env
+
+    # environment:
+    #   POSTGRES_USER: root
+    #   POSTGRES_PASSWORD: root
+    #   POSTGRES_DB: test_db
+
+    ports:
+      - "5432:5432"
+
+    # to mount the volumne for db data persistence
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+    networks:
+      - backend
+
+      
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4:9.10.0
+    restart: always
+
+    # to mount the volumne for configuration data persistence
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+    env_file:
+      - ./data/.env
+
+    # environment:
+    #   PGADMIN_DEFAULT_EMAIL: admin@admin.com
+    #   PGADMIN_DEFAULT_PASSWORD: root
+
+    ports:
+      - "5050:80"
+
+    networks:
+      - backend
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.5
+    container_name: keycloak
+    restart: always
+    env_file:
+      - ./keycloak/.env
+    ports:
+      - "8080:8080"
+
+    networks:
+      - backend
+
+    command: start-dev
+
+volumes:
+  pgadmin-data:
+    driver: local # Define the driver and options under the volume name
+    driver_opts:
+      type: none
+      device: ./data/pgadmin-data
+      o: bind
+
+  db-data:
+    driver: local # Define the driver and options under the volume name
+    driver_opts:
+      type: none
+      device: ./data/db-data
+      o: bind
+
+networks:
+  backend:
+    driver: bridge
