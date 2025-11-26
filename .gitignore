@@ -1,0 +1,3 @@
+# Ignore database data directories
+/db_layer/data/db-data/*
+/db_layer/data/pgadmin-data/*
