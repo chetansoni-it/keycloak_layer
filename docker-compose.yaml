@@ -1,24 +1,19 @@
 # Main Orchestrator Docker Compose File
 services:
-  # loadbalancer:
-  #   extends:
-  #     file: ./1_load_balancer/nginx/docker-compose.yaml
-  #     service: nginx
+  app:
+    extends:
+      file: ./3_app_layer/docker-compose.yaml
+      service: app_1
 
-  # auth:
-  #   extends:
-  #     file: ./2_auth_layer/keycloak/docker-compose.yaml
-  #     service: keycloak
-
-  # app:
-  #   extends:
-  #     file: ./3_app_layer/backend/docker-compose.yaml
-  #     service: backend
-
-  keycloak:
+  auth_layer:
     extends:
       file: ./2_auth_layer/docker-compose.yaml
       service: keycloak
+
+  # loadbalancer:
+  #   extends:
+  #     file: ./1_load_balancer/docker-compose.yaml
+  #     service: nginx
 
   db:
     extends:

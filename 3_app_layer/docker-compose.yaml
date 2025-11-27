@@ -1,0 +1,19 @@
+services:
+  app_1:
+    build:
+      context: ./app_1
+    image: myorg/app_1:v1.0.1    # 🧩 Image name + tag
+    container_name: app_1
+    restart: always
+    env_file:
+      - ./app_1/.env
+
+    # Exposing PORT <External world Port>:<Inside Container Port>
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
